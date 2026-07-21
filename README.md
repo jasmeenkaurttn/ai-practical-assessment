@@ -13,9 +13,9 @@ A full-stack web application for managing support tickets, built as part of the 
 
 ## Project Status
 
-**Current phase:** M1 — Foundation
+**Current phase:** M2–M4 — Ticket management (data layer, API, UI)
 
-The monorepo shell is bootstrapped with a React client, Express API, Prisma DB connection, and health endpoint. Ticket business logic begins in M2/M3.
+Features implemented: ticket CRUD, status workflow, filtering, search, pagination.
 
 ## Prerequisites
 
@@ -41,13 +41,20 @@ cp .env.example .env
 
 Edit `.env` and set your `DATABASE_URL` to point at a local PostgreSQL database.
 
-### 3. Generate Prisma client
+### 3. Push schema and seed data
+
+```bash
+npm run db:push
+npm run db:seed
+```
+
+### 4. Generate Prisma client
 
 ```bash
 npm run db:generate
 ```
 
-### 4. Start development servers
+### 5. Start development servers
 
 ```bash
 npm run dev
@@ -69,7 +76,9 @@ The health endpoint returns `degraded` (503) if PostgreSQL is not reachable — 
 | `npm run build` | Build client and server |
 | `npm run lint` | Run ESLint |
 | `npm run db:generate` | Generate Prisma client |
-| `npm run db:push` | Push schema to database (M2+) |
+| `npm run db:push` | Push schema to database |
+| `npm run db:seed` | Seed sample tickets |
+| `npm run test` | Run unit tests |
 
 ## Repository Structure
 
