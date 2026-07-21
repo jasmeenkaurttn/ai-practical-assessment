@@ -1,12 +1,20 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { HomePage } from './pages/HomePage';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { Layout } from './components/Layout';
+import { TicketListPage } from './pages/TicketListPage';
+import { TicketDetailPage } from './pages/TicketDetailPage';
+import { TicketCreatePage } from './pages/TicketCreatePage';
+import { TicketEditPage } from './pages/TicketEditPage';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Navigate to="/tickets" replace />} />
+        <Route path="/tickets" element={<TicketListPage />} />
+        <Route path="/tickets/new" element={<TicketCreatePage />} />
+        <Route path="/tickets/:id" element={<TicketDetailPage />} />
+        <Route path="/tickets/:id/edit" element={<TicketEditPage />} />
+      </Route>
+    </Routes>
   );
 }

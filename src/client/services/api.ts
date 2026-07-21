@@ -1,13 +1,46 @@
-import type { HealthResponse } from '@shared/types';
+import type {
+  CreateTicketInput,
+  HealthResponse,
+  PaginatedTickets,
+  Ticket,
+  TicketListQuery,
+  UpdateTicketInput,
+} from '@shared/types';
+import { apiDelete, apiGet, apiPatch, apiPost } from './http';
 
-const API_BASE = '/api';
+function buildQueryString(query: TicketListQuery): string {
+  const params = new URLSearchParams();
+
+  if (query.status) params.set('status', query.status);
+  if (query.priority) params.set('priority', query.priority);
+  if (query.search) params.set('search', query.search);
+  if (query.page) params.set('page', String(query.page));
+  if (query.limit) params.set('limit', String(query.limit));
+
+  const qs = params.toString();
+  return qs ? `?${qs}` : '';
+}
 
 export async function fetchHealth(): Promise<HealthResponse> {
-  const response = await fetch(`${API_BASE}/health`);
+  return apiGet<HealthResponse>('/health');
+}
 
-  if (!response.ok) {
-    throw new Error(`Health check failed with status ${response.status}`);
-  }
+export async function fetchTickets(query: TicketListQuery = {}): Promise<PaginatedTickets> {
+  return apiGet<PaginatedTickets>(`/tickets${buildQueryString(query)}`);
+}
 
-  return response.json() as Promise<HealthResponse>;
+export async function fetchTicket(id: string): Promise<Ticket> {
+  return apiGet<Ticket>(`/tickets/${id}`);
+}
+
+export async function createTicket(input: CreateTicketInput): Promise<Ticket> {
+  return apiPost<Ticket>('/tickets', input);
+}
+
+export async function updateTicket(id: string, input: UpdateTicketInput): Promise<Ticket> {
+  return apiPatch<Ticket>(`/tickets/${id}`, input);
+}
+
+export async function deleteTicket(id: string): Promise<void> {
+  return apiDelete(`/tickets/${id}`);
 }

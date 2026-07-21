@@ -7,4 +7,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Ticket model will be added in M2 (Data Layer)
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Ticket {
+  id          String         @id @default(uuid())
+  title       String         @db.VarChar(200)
+  description String
+  status      TicketStatus   @default(OPEN)
+  priority    TicketPriority @default(MEDIUM)
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  @@map("tickets")
+}
