@@ -1,0 +1,3 @@
+-- Support Ticket Management System
+-- Schema placeholder
+-- Tables will be defined after data model is approved.

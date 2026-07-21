@@ -1,0 +1,3 @@
+-- Support Ticket Management System
+-- Seed data placeholder
+-- Seed records will be added after schema is approved.
