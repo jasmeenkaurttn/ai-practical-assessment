@@ -1,0 +1,69 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  color: #1a1a2e;
+  background: #f5f7fa;
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+}
+
+header p {
+  margin: 0 0 2rem;
+  color: #555;
+}
+
+.status-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
+.status-card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+}
+
+.status-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.status-card li {
+  padding: 0.35rem 0;
+}
+
+.ok {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.warn {
+  color: #ca8a04;
+  font-weight: 600;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.loading {
+  color: #64748b;
+}
