@@ -19,7 +19,23 @@ async function handleResponse<T>(response: Response): Promise<T> {
     return undefined as T;
   }
 
-  const data = await response.json();
+  const text = await response.text();
+
+  if (!text) {
+    throw new ApiRequestError(
+      response.ok
+        ? 'Empty response from server'
+        : 'API server is unavailable. Run npm run dev from the project root.',
+      response.status || 503
+    );
+  }
+
+  let data: unknown;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new ApiRequestError('Invalid response from server', response.status);
+  }
 
   if (!response.ok) {
     const error = data as ApiError;
@@ -33,30 +49,41 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return data as T;
 }
 
-export async function apiGet<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`);
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  let response: Response;
+
+  try {
+    response = await fetch(`${API_BASE}${path}`, init);
+  } catch {
+    throw new ApiRequestError(
+      'Cannot reach API server. Make sure npm run dev is running.',
+      0
+    );
+  }
+
   return handleResponse<T>(response);
 }
 
+export async function apiGet<T>(path: string): Promise<T> {
+  return request<T>(path);
+}
+
 export async function apiPost<T>(path: string, body: unknown): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
+  return request<T>(path, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-  return handleResponse<T>(response);
 }
 
 export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
+  return request<T>(path, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-  return handleResponse<T>(response);
 }
 
 export async function apiDelete(path: string): Promise<void> {
-  const response = await fetch(`${API_BASE}${path}`, { method: 'DELETE' });
-  return handleResponse<void>(response);
+  return request<void>(path, { method: 'DELETE' });
 }
