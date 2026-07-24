@@ -27,3 +27,10 @@
 - **Debounced search** made a separate Search button redundant — simpler UX is often better.
 - **Toast + redirect to list** after create/delete gives clearer feedback than navigating to detail pages.
 - Keeping validation logic pure and well-tested reduces bugs in both frontend and backend layers.
+
+## M8 Delivery
+
+- All acceptance criteria verified and checked off.
+- 46 unit tests passing; results recorded in `test-results.md`.
+- PR description, reflection, and `final-ai-usage-summary.md` completed for submission.
+- Repository pushed to GitHub: `jasmeenkaurttn/ai-practical-assessment`.
