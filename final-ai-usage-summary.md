@@ -27,7 +27,7 @@ This project was built using **Cursor AI** as the primary development assistant 
 | Implementation | `ai-prompts/implementation.md` | M1 bootstrap, M2–M4 ticket CRUD, UX polish |
 | Testing | `ai-prompts/testing.md` | Test strategy, 46 unit tests |
 | Debugging | `ai-prompts/debugging.md` | PostgreSQL auth, ECONNREFUSED, Git 403 |
-| Code review | `ai-prompts/code-review.md` | Placeholder — formal review in M7 notes |
+| Code review | `ai-prompts/code-review.md` | M7 self-review, review-fixes tracking |
 | Documentation | `ai-prompts/documentation.md` | Doc scaffolds, prompt history, M8 delivery |
 
 ## Effectiveness Assessment

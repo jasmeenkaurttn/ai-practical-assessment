@@ -2,7 +2,7 @@
 
 ## Session Overview
 
-Testing strategy was defined during M0 planning. Unit tests for validation logic were implemented during M2–M4. Integration, E2E, and CI testing are planned for M6 but not yet executed.
+Testing strategy was defined during M0 planning. Unit tests for validation logic were implemented during M2–M4 and expanded during M6. Results recorded in `test-results.md` (46 tests passing). Integration, E2E, and CI remain deferred.
 
 ---
 
@@ -64,24 +64,53 @@ Created `tests/validation.test.ts` covering `validateCreateTicketInput`, `valida
 Validation logic is shared between API and UI layers; unit tests provide fast feedback on business rules without requiring a running database.
 
 ### Validation or Outcome
-Test file created. Execution pending on user's Node 20+ environment (`npm run test` not yet confirmed locally).
+Initial test file created during M2–M4. Expanded and verified after Node 20+ upgrade.
+
+---
+
+## Prompt 3: Expand Validation Unit Tests and Record Results (M6)
+
+### Prompt Summary
+Expand unit test coverage for shared validation logic and document results in `test-results.md` as part of M6 testing milestone.
+
+### Project Context
+- **Phase:** M6 — Testing (partial)
+- `tests/validation.test.ts` existed with basic cases; user upgraded from Node 12 to Node 20
+
+### AI Response Summary
+Expanded `tests/validation.test.ts` to 46 tests covering create/update validation, list query validation, status transition rules, and `getAllowedStatusTransitions`. Ran `npm run test` successfully and populated `test-results.md` with Vitest output summary.
+
+### What Was Accepted
+- Comprehensive validation unit tests (46 total)
+- Test results documented with date, runner version, pass/fail counts
+
+### What Was Modified
+- N/A
+
+### What Was Rejected
+- Trivial assertion-only tests
+
+### Reasoning Behind the Decision
+Validation module is shared between API and UI; unit tests provide fast, database-free confidence in business rules.
+
+### Validation or Outcome
+46/46 tests passing. Committed as `6667cd9 test(validation): expand unit test coverage` and `9890adc docs: record unit test results (46 passed)`.
 
 ---
 
 ## Not Yet Performed
 
-The following testing activities are planned for **M6** and will be updated in future milestones:
+The following testing activities remain deferred (tracked in `review-fixes.md`):
 
 - API integration tests (Supertest + test database)
-- End-to-end tests (Playwright: create → list → view → edit ticket flow)
-- CI pipeline integration
-- Coverage report logged in `test-results.md`
+- End-to-end tests (Playwright: create → list → view → edit → delete flow)
+- CI pipeline integration (`npm test` + `npm run build` on push/PR)
 
 ---
 
 ## Follow-Up Actions
 
-- [ ] Run `npm run test` after Node 20+ setup and record results in `test-results.md`
+- [x] Run `npm run test` and record results in `test-results.md`
 - [ ] Add Supertest integration tests for `/api/tickets` endpoints
 - [ ] Add Playwright E2E for critical user flows
-- [ ] Define coverage goals in `test-strategy.md` once baseline is established
+- [ ] Add GitHub Actions CI workflow

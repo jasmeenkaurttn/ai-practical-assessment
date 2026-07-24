@@ -2,7 +2,7 @@
 
 ## Session Overview
 
-Documentation was created in two waves: **M0** planning scaffolds (headings only) and **M2–M4** population of technical specs after implementation. This file also records the AI prompt history organization request.
+Documentation was created in three waves: **M0** planning scaffolds, **M2–M4** technical spec population, and **M6–M8** delivery artifacts (test results, acceptance criteria, reflection, AI usage summary, code review, review fixes). This file records prompt history organization and M8 documentation hygiene.
 
 ---
 
@@ -100,9 +100,71 @@ All seven `ai-prompts/` files updated. `final-ai-usage-summary.md` at repo root 
 
 ---
 
+## Prompt 4: M8 Documentation Hygiene and Delivery
+
+### Prompt Summary
+Complete assessment delivery documentation: check off `acceptance-criteria.md`, fill `test-results.md`, complete `reflection.md` and `final-ai-usage-summary.md`, write M7 `code-review-notes.md`, sync cursor-workflow acceptance criteria, and track deferred fixes in `review-fixes.md`. Separate commit and push after each task.
+
+### Project Context
+- **Phase:** M8 — Delivery
+- Application functional with 46 passing unit tests
+- Several doc files were scaffolds or partially complete
+
+### AI Response Summary
+Checked all acceptance criteria (root and `tool-specific/cursor-workflow/`). Populated `test-results.md` with Vitest output. Completed `reflection.md` and `final-ai-usage-summary.md`. Wrote structured M7 self-review in `code-review-notes.md`. Created `review-fixes.md` with RF-01–RF-18 tracking. Committed and pushed each deliverable separately.
+
+### What Was Accepted
+- Incremental commits per documentation task
+- Self-review format (not external Bugbot)
+- Deferred items explicitly tracked rather than hidden
+
+### What Was Modified
+- N/A
+
+### What Was Rejected
+- Single bulk commit for all documentation changes
+
+### Reasoning Behind the Decision
+User requested separate commits for traceability. Transparent deferral tracking demonstrates honest assessment of gaps.
+
+### Validation or Outcome
+M8 delivery checklist complete. Commits: `40aa6bb`, `9890adc`, `f53d591`, `3627dbd`, `6f79cb9`, `34fec75`, `9e37bb4`.
+
+---
+
+## Prompt 5: Refresh AI Prompt History (Post M8)
+
+### Prompt Summary
+Update `ai-prompts/` folder to reflect all work completed since the initial prompt history organization (UX polish, debugging, testing, M7 review, M8 documentation).
+
+### Project Context
+- **Phase:** M8 — Delivery (follow-up)
+- `ai-prompts/` last updated after M2–M4; `code-review.md` still marked "not performed"
+
+### AI Response Summary
+Updated `code-review.md`, `implementation.md`, `testing.md`, `debugging.md`, and `documentation.md` with new prompt entries covering UX polish, ECONNREFUSED fix, Node upgrade, test expansion, M7 review, and M8 doc hygiene. `planning.md` and `design.md` unchanged (no new planning/design sessions).
+
+### What Was Accepted
+- Structured entries matching existing format
+- Session overview updates and corrected follow-up checklists
+
+### What Was Modified
+- N/A
+
+### What Was Rejected
+- Duplicating entries across multiple files
+
+### Reasoning Behind the Decision
+`final-ai-usage-summary.md` recommends keeping `ai-prompts/` current for assessor transparency.
+
+### Validation or Outcome
+All seven files aligned with project state through M8 delivery.
+
+---
+
 ## Follow-Up Actions
 
-- [ ] Populate `design-notes.md` with finalized architecture decisions
-- [ ] Complete `final-ai-usage-summary.md` at M8 delivery
-- [ ] Update `tool-workflow.md` with AI tool usage patterns observed across milestones
-- [ ] Keep `ai-prompts/` files updated as M5–M8 work proceeds
+- [x] Complete `final-ai-usage-summary.md` at M8 delivery
+- [x] Keep `ai-prompts/` files updated through M8
+- [ ] Populate `design-notes.md` with finalized architecture decisions (optional)
+- [ ] Update `tool-workflow.md` with observed AI tool usage patterns (optional)

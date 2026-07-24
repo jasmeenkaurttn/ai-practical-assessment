@@ -2,7 +2,7 @@
 
 ## Session Overview
 
-Implementation progressed through three phases: **M0** documentation scaffold, **M1** monorepo foundation, and **M2–M4** ticket management (data layer, REST API, React UI). No application code was written during M0.
+Implementation progressed through **M0** documentation scaffold, **M1** monorepo foundation, **M2–M4** ticket management (data layer, REST API, React UI), and post-M4 **UX polish** (skeletons, toasts, debounced search, delete modal). No application code was written during M0.
 
 ---
 
@@ -101,12 +101,76 @@ Implemented full ticket vertical slice:
 Vertical slice delivery demonstrates end-to-end capability within assessment scope. Shared validation between client hints and server enforcement ensures data integrity.
 
 ### Validation or Outcome
-Feature code complete. Pending local validation: user must configure `.env` with correct PostgreSQL credentials and run `db:push`, `db:seed`, `dev`.
+Feature code complete. User configured PostgreSQL, ran `db:push`/`db:seed`, and verified `npm run dev` locally.
+
+---
+
+## Prompt 4: UX Polish (Loading, Toasts, Counters, Search)
+
+### Prompt Summary
+Implement frontend UX improvements: loading skeleton, character counters on form fields, success toasts, empty state CTA, and debounced search (replacing Enter-only search).
+
+### Project Context
+- **Phase:** Post M4 — UX polish
+- Ticket list showed plain "Loading tickets..." text; no user feedback on mutations
+
+### AI Response Summary
+Added `TicketListSkeleton`, `ToastContext`/`ToastContainer`, character counters in `TicketForm` (title 200, description min 10), empty state with link to `/tickets/new`, and 400ms debounced search via `useDebounce` hook. Exported length constants from `validation.ts`.
+
+### What Was Accepted
+- Toast system (no new npm dependency)
+- Debounced search updating URL params
+- Skeleton loader on list page
+- Character counters with visual limit indicators
+
+### What Was Modified
+- Initial toast position was bottom; user requested top-right in follow-up (Prompt 5)
+
+### What Was Rejected
+- N/A
+
+### Reasoning Behind the Decision
+All changes are frontend-only with no API contract changes — lowest regression risk while improving perceived quality.
+
+### Validation or Outcome
+Committed as `c3617d7 feat(ui): add loading skeletons, toasts, character counters, and search polish`.
+
+---
+
+## Prompt 5: Toast Position, Redirects, Delete Modal, Search Cleanup
+
+### Prompt Summary
+Follow-up UX refinements: move toasts to top-right with animation, redirect to list after create/delete success, remove redundant Search button, replace `window.confirm` with delete confirmation modal.
+
+### Project Context
+- **Phase:** Post M4 — UX polish (iteration 2)
+- Debounced search made Search button redundant
+
+### AI Response Summary
+Repositioned toasts top-right with slide-in animation and icon badges. Changed create success redirect from detail page to `/tickets`. Removed Search button and Enter handler from list filters. Added `ConfirmModal` with Escape/backdrop dismiss and loading state on delete.
+
+### What Was Accepted
+- Top-right toast with CSS animation
+- Redirect to list after create and delete (edit still goes to detail)
+- `ConfirmModal` replacing native confirm dialog
+- Search input-only filtering
+
+### What Was Modified
+- N/A
+
+### What Was Rejected
+- N/A
+
+### Reasoning Behind the Decision
+User explicitly requested toast position and post-mutation redirects. Modal improves UX consistency over browser `confirm()`.
+
+### Validation or Outcome
+Committed as `0fa065a` (toast/redirect) and `f5d11ff` (modal/search cleanup).
 
 ---
 
 ## Follow-Up Actions
 
-- [ ] M5: End-to-end integration verification once database is connected
-- [ ] M6: Expand test coverage (API integration tests, optional Playwright E2E)
-- [ ] M7: Hardening pass based on code review findings
+- [x] M5: End-to-end integration verified locally (`npm run dev`, full CRUD flow)
+- [ ] M6: API integration tests and Playwright E2E (deferred — see `review-fixes.md` RF-10/RF-11)
+- [x] M7: Hardening pass documented in `code-review-notes.md`

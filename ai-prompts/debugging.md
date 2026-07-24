@@ -2,7 +2,7 @@
 
 ## Session Overview
 
-Debugging sessions focused on environment setup issues: GitHub authentication for push, PostgreSQL credential configuration, and local database tooling. No application-level code bugs were reported or fixed.
+Debugging sessions focused on environment setup (GitHub auth, PostgreSQL credentials, Node version) and one application-level startup race (`ECONNREFUSED` on `/api/tickets`). All resolved during M2–M5 local integration.
 
 ---
 
@@ -95,12 +95,72 @@ Advised cancelling Stack Builder (optional, not needed for project). Instructed 
 Stack Builder extras are unnecessary for Prisma + Node.js. SQL Shell setup prompts are connection parameters, not a SQL execution environment.
 
 ### Validation or Outcome
-User successfully connected and created `support_tickets` database. Remaining blocker is `.env` credential alignment.
+User successfully connected and created `support_tickets` database. `db:push` and `db:seed` succeed after `.env` password alignment.
+
+---
+
+## Prompt 4: API Startup Race (ECONNREFUSED)
+
+### Prompt Summary
+Fix `ECONNREFUSED` errors when the Vite client requests `/api/tickets` immediately on page load.
+
+### Project Context
+- **Phase:** M5 — Integration
+- `npm run dev` starts server and client concurrently; Vite proxy hits API before Express is listening
+
+### AI Response Summary
+Diagnosed startup race condition. Added `wait-on` dependency and updated dev script to wait for `http://localhost:3001/api/health` before starting Vite client. Improved `src/client/services/http.ts` to surface clearer API error messages.
+
+### What Was Accepted
+- `wait-on` in `package.json` dev script
+- Improved HTTP client error handling
+
+### What Was Modified
+- N/A
+
+### What Was Rejected
+- N/A
+
+### Reasoning Behind the Decision
+Health-check gating is a standard fix for concurrent dev startup; no production behavior change.
+
+### Validation or Outcome
+Committed as `f35320f fix(dev): wait for API before starting client and improve error handling`. `/tickets` loads without proxy errors after restart.
+
+---
+
+## Prompt 5: Node.js Version Too Old for Tooling
+
+### Prompt Summary
+Resolve `npm install` / Prisma postinstall failures caused by Node.js v12.
+
+### Project Context
+- **Phase:** M2 — Data Layer
+- Prisma 6 and Vite 6 require Node 18+; project specifies Node 20+ in `.nvmrc`
+
+### AI Response Summary
+Identified Node 12 as root cause of install and build failures. Directed user to upgrade to Node 20 LTS using nvm or official installer. Confirmed `.nvmrc` and `engines` field already enforce Node 20+.
+
+### What Was Accepted
+- Upgrade local Node to 20+
+- Use `.nvmrc` for version consistency
+
+### What Was Modified
+- N/A
+
+### What Was Rejected
+- Downgrading Prisma/Vite to support Node 12
+
+### Reasoning Behind the Decision
+Modern toolchain requires current Node; downgrading dependencies would create security and compatibility issues.
+
+### Validation or Outcome
+User upgraded to Node 20. `npm install`, `npm run test`, and `npm run dev` succeed.
 
 ---
 
 ## Follow-Up Actions
 
-- [ ] Confirm `npm run db:push` and `npm run db:seed` succeed after `.env` fix
-- [ ] Record resolution in `debugging-notes.md` once database connection is verified
-- [ ] Document any application-level bugs discovered during M5 integration testing
+- [x] Confirm `npm run db:push` and `npm run db:seed` succeed after `.env` fix
+- [x] Resolve ECONNREFUSED startup race with `wait-on`
+- [x] Upgrade Node.js to 20+ for Prisma/Vite compatibility
