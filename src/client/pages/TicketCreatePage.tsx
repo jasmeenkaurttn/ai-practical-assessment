@@ -11,9 +11,9 @@ export function TicketCreatePage() {
 
   async function handleSubmit(data: CreateTicketInput) {
     try {
-      const ticket = await createTicket(data);
+      await createTicket(data);
       showToast('Ticket created successfully');
-      navigate(`/tickets/${ticket.id}`);
+      navigate('/tickets');
     } catch (err) {
       if (err instanceof ApiRequestError) {
         const error = new Error(err.message) as Error & { details?: string[] };
