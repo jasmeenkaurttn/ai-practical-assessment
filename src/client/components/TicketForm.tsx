@@ -10,6 +10,7 @@ import {
   type TicketStatus,
   type UpdateTicketInput,
 } from '@shared/types';
+import { MAX_TITLE_LENGTH, MIN_DESCRIPTION_LENGTH } from '@shared/validation';
 
 interface TicketFormProps {
   initial?: Ticket;
@@ -32,6 +33,10 @@ export function TicketForm({
   const [priority, setPriority] = useState<TicketPriority>(initial?.priority ?? 'MEDIUM');
   const [errors, setErrors] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+
+  const titleLength = title.length;
+  const descriptionLength = description.trim().length;
+  const descriptionRemaining = MIN_DESCRIPTION_LENGTH - descriptionLength;
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -64,20 +69,38 @@ export function TicketForm({
       )}
 
       <div className="form-field">
-        <label htmlFor="title">Title</label>
+        <div className="form-field-header">
+          <label htmlFor="title">Title</label>
+          <span
+            className={`field-hint ${titleLength >= MAX_TITLE_LENGTH ? 'at-limit' : ''}`}
+            aria-live="polite"
+          >
+            {titleLength}/{MAX_TITLE_LENGTH}
+          </span>
+        </div>
         <input
           id="title"
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Brief summary of the issue"
-          maxLength={200}
+          maxLength={MAX_TITLE_LENGTH}
           required
         />
       </div>
 
       <div className="form-field">
-        <label htmlFor="description">Description</label>
+        <div className="form-field-header">
+          <label htmlFor="description">Description</label>
+          <span
+            className={`field-hint ${descriptionRemaining > 0 ? 'warn' : 'ok'}`}
+            aria-live="polite"
+          >
+            {descriptionRemaining > 0
+              ? `${descriptionRemaining} more characters needed`
+              : `${descriptionLength} characters`}
+          </span>
+        </div>
         <textarea
           id="description"
           value={description}

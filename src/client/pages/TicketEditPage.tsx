@@ -5,10 +5,12 @@ import { fetchTicket, updateTicket } from '../services/api';
 import { TicketForm } from '../components/TicketForm';
 import { ApiRequestError } from '../services/http';
 import { getAllowedStatusTransitions } from '@shared/validation';
+import { useToast } from '../context/ToastContext';
 
 export function TicketEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,6 +33,7 @@ export function TicketEditPage() {
 
     try {
       const updated = await updateTicket(id, data);
+      showToast('Ticket updated successfully');
       navigate(`/tickets/${updated.id}`);
     } catch (err) {
       if (err instanceof ApiRequestError) {

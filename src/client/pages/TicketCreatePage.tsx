@@ -3,13 +3,16 @@ import type { CreateTicketInput } from '@shared/types';
 import { createTicket } from '../services/api';
 import { TicketForm } from '../components/TicketForm';
 import { ApiRequestError } from '../services/http';
+import { useToast } from '../context/ToastContext';
 
 export function TicketCreatePage() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   async function handleSubmit(data: CreateTicketInput) {
     try {
       const ticket = await createTicket(data);
+      showToast('Ticket created successfully');
       navigate(`/tickets/${ticket.id}`);
     } catch (err) {
       if (err instanceof ApiRequestError) {

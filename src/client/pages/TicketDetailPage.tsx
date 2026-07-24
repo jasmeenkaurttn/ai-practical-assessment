@@ -4,6 +4,7 @@ import type { Ticket } from '@shared/types';
 import { deleteTicket, fetchTicket } from '../services/api';
 import { StatusBadge } from '../components/StatusBadge';
 import { PriorityBadge } from '../components/PriorityBadge';
+import { useToast } from '../context/ToastContext';
 
 function formatDateTime(iso: string) {
   return new Date(iso).toLocaleString(undefined, {
@@ -18,6 +19,7 @@ function formatDateTime(iso: string) {
 export function TicketDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +40,7 @@ export function TicketDetailPage() {
     setDeleting(true);
     try {
       await deleteTicket(id);
+      showToast('Ticket deleted successfully');
       navigate('/tickets');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete ticket');

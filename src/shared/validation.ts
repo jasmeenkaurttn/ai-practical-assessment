@@ -11,6 +11,8 @@ import {
 const MAX_TITLE_LENGTH = 200;
 const MIN_DESCRIPTION_LENGTH = 10;
 
+export { MAX_TITLE_LENGTH, MIN_DESCRIPTION_LENGTH };
+
 export function isTicketStatus(value: string): value is TicketStatus {
   return TICKET_STATUSES.includes(value as TicketStatus);
 }

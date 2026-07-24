@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import type { PaginatedTickets, TicketPriority, TicketStatus } from '@shared/types';
 import { TICKET_PRIORITIES, TICKET_STATUSES, PRIORITY_LABELS, STATUS_LABELS } from '@shared/types';
 import { fetchTickets } from '../services/api';
 import { TicketCard } from '../components/TicketCard';
+import { TicketListSkeleton } from '../components/TicketListSkeleton';
+import { useDebounce } from '../hooks/useDebounce';
 
 export function TicketListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,6 +17,28 @@ export function TicketListPage() {
   const priority = (searchParams.get('priority') as TicketPriority | null) ?? undefined;
   const search = searchParams.get('search') ?? '';
   const page = Number(searchParams.get('page') ?? '1');
+
+  const [searchInput, setSearchInput] = useState(search);
+  const debouncedSearch = useDebounce(searchInput, 400);
+
+  useEffect(() => {
+    setSearchInput(search);
+  }, [search]);
+
+  useEffect(() => {
+    if (debouncedSearch === search) {
+      return;
+    }
+
+    const next = new URLSearchParams(searchParams);
+    if (debouncedSearch.trim()) {
+      next.set('search', debouncedSearch.trim());
+    } else {
+      next.delete('search');
+    }
+    next.delete('page');
+    setSearchParams(next);
+  }, [debouncedSearch, search, searchParams, setSearchParams]);
 
   const loadTickets = useCallback(async () => {
     setLoading(true);
@@ -51,11 +75,17 @@ export function TicketListPage() {
     setSearchParams(next);
   }
 
+  function applySearch() {
+    updateFilter('search', searchInput.trim());
+  }
+
   function goToPage(nextPage: number) {
     const next = new URLSearchParams(searchParams);
     next.set('page', String(nextPage));
     setSearchParams(next);
   }
+
+  const hasActiveFilters = Boolean(status || priority || search);
 
   return (
     <div className="page">
@@ -67,17 +97,24 @@ export function TicketListPage() {
       </div>
 
       <div className="filters">
-        <input
-          type="search"
-          placeholder="Search tickets..."
-          defaultValue={search}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              updateFilter('search', (e.target as HTMLInputElement).value);
-            }
-          }}
-          className="filter-search"
-        />
+        <div className="search-group">
+          <input
+            type="search"
+            placeholder="Search tickets..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                applySearch();
+              }
+            }}
+            className="filter-search"
+            aria-label="Search tickets"
+          />
+          <button type="button" className="btn btn-secondary btn-sm" onClick={applySearch}>
+            Search
+          </button>
+        </div>
         <select
           value={status ?? ''}
           onChange={(e) => updateFilter('status', e.target.value)}
@@ -104,7 +141,7 @@ export function TicketListPage() {
         </select>
       </div>
 
-      {loading && <p className="loading">Loading tickets...</p>}
+      {loading && <TicketListSkeleton />}
       {error && <p className="error">{error}</p>}
 
       {!loading && !error && result && (
@@ -112,7 +149,14 @@ export function TicketListPage() {
           {result.data.length === 0 ? (
             <div className="empty-state">
               <p>No tickets found.</p>
-              <p>Try adjusting your filters or create a new ticket.</p>
+              <p>
+                {hasActiveFilters
+                  ? 'Try adjusting your filters or create a new ticket.'
+                  : 'Get started by creating your first support ticket.'}
+              </p>
+              <Link to="/tickets/new" className="btn btn-primary empty-state-cta">
+                + Create New Ticket
+              </Link>
             </div>
           ) : (
             <div className="ticket-list">
