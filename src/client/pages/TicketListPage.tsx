@@ -75,10 +75,6 @@ export function TicketListPage() {
     setSearchParams(next);
   }
 
-  function applySearch() {
-    updateFilter('search', searchInput.trim());
-  }
-
   function goToPage(nextPage: number) {
     const next = new URLSearchParams(searchParams);
     next.set('page', String(nextPage));
@@ -97,24 +93,14 @@ export function TicketListPage() {
       </div>
 
       <div className="filters">
-        <div className="search-group">
-          <input
-            type="search"
-            placeholder="Search tickets..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                applySearch();
-              }
-            }}
-            className="filter-search"
-            aria-label="Search tickets"
-          />
-          <button type="button" className="btn btn-secondary btn-sm" onClick={applySearch}>
-            Search
-          </button>
-        </div>
+        <input
+          type="search"
+          placeholder="Search tickets..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          className="filter-search"
+          aria-label="Search tickets"
+        />
         <select
           value={status ?? ''}
           onChange={(e) => updateFilter('status', e.target.value)}
